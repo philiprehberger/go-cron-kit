@@ -70,6 +70,8 @@ Standard 5-field format: `minute hour day-of-month month day-of-week`
 - `1-5` — ranges
 - `1,3,5` — lists
 
+When both day-of-month and day-of-week are restricted (not `*`), the job runs when **either** matches (POSIX cron OR semantics). For example, `0 0 15 * 1` runs at midnight on the 15th **or** on Mondays.
+
 ## License
 
 MIT

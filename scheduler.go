@@ -16,9 +16,10 @@ type Job struct {
 
 // Scheduler manages cron jobs with overlap prevention.
 type Scheduler struct {
-	mu   sync.Mutex
-	jobs []*Job
-	stop chan struct{}
+	mu       sync.Mutex
+	jobs     []*Job
+	stop     chan struct{}
+	stopOnce sync.Once
 }
 
 // NewScheduler creates a new Scheduler.
@@ -67,9 +68,9 @@ func (s *Scheduler) Start(ctx context.Context) {
 	}
 }
 
-// Stop signals the scheduler to stop.
+// Stop signals the scheduler to stop. Safe to call multiple times.
 func (s *Scheduler) Stop() {
-	close(s.stop)
+	s.stopOnce.Do(func() { close(s.stop) })
 }
 
 // NextRun returns the next scheduled run time for the named job.

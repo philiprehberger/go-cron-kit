@@ -10,11 +10,13 @@ import (
 
 // Schedule represents a parsed cron expression.
 type Schedule struct {
-	Minutes    []int
-	Hours      []int
+	Minutes     []int
+	Hours       []int
 	DaysOfMonth []int
-	Months     []int
-	DaysOfWeek []int
+	Months      []int
+	DaysOfWeek  []int
+	domWild     bool
+	dowWild     bool
 }
 
 // Parse parses a standard 5-field cron expression.
@@ -52,6 +54,8 @@ func Parse(expr string) (*Schedule, error) {
 		DaysOfMonth: dom,
 		Months:      months,
 		DaysOfWeek:  dow,
+		domWild:     fields[2] == "*",
+		dowWild:     fields[4] == "*",
 	}, nil
 }
 
@@ -70,11 +74,18 @@ func (s *Schedule) Next(after time.Time) time.Time {
 }
 
 func (s *Schedule) matches(t time.Time) bool {
-	return contains(s.Minutes, t.Minute()) &&
-		contains(s.Hours, t.Hour()) &&
-		contains(s.DaysOfMonth, t.Day()) &&
-		contains(s.Months, int(t.Month())) &&
-		contains(s.DaysOfWeek, int(t.Weekday()))
+	if !contains(s.Minutes, t.Minute()) || !contains(s.Hours, t.Hour()) || !contains(s.Months, int(t.Month())) {
+		return false
+	}
+
+	domMatch := contains(s.DaysOfMonth, t.Day())
+	dowMatch := contains(s.DaysOfWeek, int(t.Weekday()))
+
+	// POSIX cron: when both DOM and DOW are restricted, use OR logic
+	if !s.domWild && !s.dowWild {
+		return domMatch || dowMatch
+	}
+	return domMatch && dowMatch
 }
 
 func contains(vals []int, v int) bool {
