@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.1
+
+- Add panic recovery in job handler goroutine — panicking handlers no longer leave jobs permanently stuck
+- Add test for handler panic recovery
+
 ## 0.2.0
 
 - Fix day-of-month / day-of-week matching to use OR logic per POSIX cron standard

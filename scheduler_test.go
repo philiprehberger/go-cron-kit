@@ -89,6 +89,53 @@ func TestSchedulerStartStop(t *testing.T) {
 	}
 }
 
+func TestSchedulerHandlerPanicRecovery(t *testing.T) {
+	s := NewScheduler()
+
+	callCount := 0
+	s.mu.Lock()
+	s.jobs = append(s.jobs, &Job{
+		Name: "panicker",
+		Schedule: &Schedule{
+			Minutes:     makeRange(0, 59, 1),
+			Hours:       makeRange(0, 23, 1),
+			DaysOfMonth: makeRange(1, 31, 1),
+			Months:      makeRange(1, 12, 1),
+			DaysOfWeek:  makeRange(0, 6, 1),
+			domWild:     true,
+			dowWild:     true,
+		},
+		Handler: func(ctx context.Context) {
+			callCount++
+			if callCount == 1 {
+				panic("test panic")
+			}
+		},
+	})
+	s.mu.Unlock()
+
+	// First tick — handler panics, but running flag should be reset
+	ctx := context.Background()
+	s.tick(ctx)
+	time.Sleep(50 * time.Millisecond)
+
+	// Verify the job is not stuck — running should be false
+	s.mu.Lock()
+	running := s.jobs[0].running
+	s.mu.Unlock()
+	if running {
+		t.Fatal("expected job to not be stuck after panic")
+	}
+
+	// Second tick — handler should run again
+	s.tick(ctx)
+	time.Sleep(50 * time.Millisecond)
+
+	if callCount < 2 {
+		t.Fatalf("expected handler to be called again after panic, callCount=%d", callCount)
+	}
+}
+
 func TestSchedulerContextCancel(t *testing.T) {
 	s := NewScheduler()
 	s.Add("job", "* * * * *", func(ctx context.Context) {})

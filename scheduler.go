@@ -110,10 +110,13 @@ func (s *Scheduler) tick(ctx context.Context) {
 		if job.Schedule.matches(now) {
 			job.running = true
 			go func(j *Job) {
+				defer func() {
+					recover()
+					s.mu.Lock()
+					j.running = false
+					s.mu.Unlock()
+				}()
 				j.Handler(ctx)
-				s.mu.Lock()
-				j.running = false
-				s.mu.Unlock()
 			}(job)
 		}
 	}
