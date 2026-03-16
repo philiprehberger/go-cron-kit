@@ -1,5 +1,9 @@
 # go-cron-kit
 
+[![CI](https://github.com/philiprehberger/go-cron-kit/actions/workflows/ci.yml/badge.svg)](https://github.com/philiprehberger/go-cron-kit/actions/workflows/ci.yml)
+[![Go Reference](https://pkg.go.dev/badge/github.com/philiprehberger/go-cron-kit.svg)](https://pkg.go.dev/github.com/philiprehberger/go-cron-kit)
+[![License](https://img.shields.io/github/license/philiprehberger/go-cron-kit)](LICENSE)
+
 Cron expression parser and job scheduler with overlap prevention for Go.
 
 ## Installation
@@ -71,6 +75,13 @@ Standard 5-field format: `minute hour day-of-month month day-of-week`
 - `1,3,5` — lists
 
 When both day-of-month and day-of-week are restricted (not `*`), the job runs when **either** matches (POSIX cron OR semantics). For example, `0 0 15 * 1` runs at midnight on the 15th **or** on Mondays.
+
+## Development
+
+```bash
+go test ./...
+go vet ./...
+```
 
 ## License
 

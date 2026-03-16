@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.2
+
+- Add badges and Development section to README
+
 ## 0.2.1
 
 - Add panic recovery in job handler goroutine — panicking handlers no longer leave jobs permanently stuck
