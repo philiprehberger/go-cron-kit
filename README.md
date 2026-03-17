@@ -76,6 +76,27 @@ Standard 5-field format: `minute hour day-of-month month day-of-week`
 
 When both day-of-month and day-of-week are restricted (not `*`), the job runs when **either** matches (POSIX cron OR semantics). For example, `0 0 15 * 1` runs at midnight on the 15th **or** on Mondays.
 
+## API
+
+| Function / Method | Description |
+|---|---|
+| `Parse(expr string) (*Schedule, error)` | Parse a standard 5-field cron expression |
+| `NewScheduler() *Scheduler` | Create a new job scheduler |
+| `Schedule.Next(after time.Time) time.Time` | Return the next time after t that matches the schedule |
+| `Scheduler.Add(name, expr string, handler func(ctx context.Context)) error` | Register a new job with the given cron expression |
+| `Scheduler.Start(ctx context.Context)` | Start the scheduler, blocking until cancelled or stopped |
+| `Scheduler.Stop()` | Signal the scheduler to stop gracefully |
+| `Scheduler.NextRun(name string) (time.Time, bool)` | Return the next scheduled run time for a named job |
+| `Scheduler.Jobs() []string` | Return a copy of all registered job names |
+
+**Types:**
+
+| Type | Description |
+|---|---|
+| `Schedule` | A parsed cron expression with Minutes, Hours, DaysOfMonth, Months, and DaysOfWeek fields |
+| `Job` | A scheduled job with Name, Schedule, and Handler fields |
+| `Scheduler` | Manages cron jobs with overlap prevention |
+
 ## Development
 
 ```bash
