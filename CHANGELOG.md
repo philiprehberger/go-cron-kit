@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.3
+
+- Consolidate README badges onto single line
+
 ## 0.2.2
 
 - Add badges and Development section to README

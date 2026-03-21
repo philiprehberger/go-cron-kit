@@ -1,8 +1,6 @@
 # go-cron-kit
 
-[![CI](https://github.com/philiprehberger/go-cron-kit/actions/workflows/ci.yml/badge.svg)](https://github.com/philiprehberger/go-cron-kit/actions/workflows/ci.yml)
-[![Go Reference](https://pkg.go.dev/badge/github.com/philiprehberger/go-cron-kit.svg)](https://pkg.go.dev/github.com/philiprehberger/go-cron-kit)
-[![License](https://img.shields.io/github/license/philiprehberger/go-cron-kit)](LICENSE)
+[![CI](https://github.com/philiprehberger/go-cron-kit/actions/workflows/ci.yml/badge.svg)](https://github.com/philiprehberger/go-cron-kit/actions/workflows/ci.yml) [![Go Reference](https://pkg.go.dev/badge/github.com/philiprehberger/go-cron-kit.svg)](https://pkg.go.dev/github.com/philiprehberger/go-cron-kit) [![License](https://img.shields.io/github/license/philiprehberger/go-cron-kit)](LICENSE)
 
 Cron expression parser and job scheduler with overlap prevention for Go
 
